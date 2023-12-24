@@ -5,8 +5,8 @@ import { HistoryObject } from "../utils/TypeDeclaration";
 
 const History = ({ dataArr }: { dataArr: HistoryObject[] }) => {
 	return (
-		<View>
-			{dataArr?.length === 0 ? (
+		<View style={{ flex: 1 }}>
+			{dataArr.length === 0 ? (
 				<View
 					style={{
 						backgroundColor: "transparent",
