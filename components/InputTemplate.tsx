@@ -4,11 +4,13 @@ import { FONT, SIZES } from "../constants/theme";
 const InputTemplate = ({
 	input,
 	btnText,
+	unitText,
 	handleInputChange,
 	handlePress,
 }: {
 	input: string;
 	btnText: string;
+	unitText: string;
 	handleInputChange: (text: string) => void;
 	handlePress: () => void;
 }) => {
@@ -58,7 +60,7 @@ const InputTemplate = ({
 							zIndex: 20,
 						}}
 					>
-						mL
+						{unitText}
 					</Text>
 				</View>
 			</View>

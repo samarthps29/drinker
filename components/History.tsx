@@ -1,28 +1,29 @@
-import { useContext } from "react";
-import {
-	FlatList,
-	SafeAreaView,
-	StatusBar,
-	StyleSheet,
-	Text,
-	View,
-} from "react-native";
-import { COLORS, FONT, SIZES } from "../../constants/theme";
-import { HistoryContext } from "../../utils/HistoryContext";
+import dayjs from "dayjs";
+import { FlatList, View, Text } from "react-native";
+import { FONT, SIZES } from "../constants/theme";
+import { HistoryObject } from "../utils/TypeDeclaration";
 
-const History = () => {
-	const context = useContext(HistoryContext);
+const History = ({ dataArr }: { dataArr: HistoryObject[] }) => {
 	return (
-		<SafeAreaView style={styles.screenContainer}>
-			<StatusBar hidden />
-			<View style={styles.contentContainer}>
-				<Text style={{ fontFamily: FONT.bold, fontSize: 40 }}>
-					History
-				</Text>
-
+		<View>
+			{dataArr?.length === 0 ? (
+				<View
+					style={{
+						backgroundColor: "transparent",
+						width: "100%",
+						alignItems: "center",
+						justifyContent: "center",
+						flex: 1,
+					}}
+				>
+					<Text style={{ fontFamily: FONT.medium, fontSize: 16 }}>
+						Nothing Here
+					</Text>
+				</View>
+			) : (
 				<FlatList
 					showsVerticalScrollIndicator={false}
-					data={context?.histArr}
+					data={dataArr}
 					renderItem={({ item }) => {
 						return (
 							<View
@@ -35,6 +36,7 @@ const History = () => {
 									// 		? "#F0DBDB"
 									// 		: "#CEEDC7"
 									// }`,
+									// TODO: move these colors to constants
 									backgroundColor: `${
 										item.remainingAmount
 											? item.remainingAmount >= 0
@@ -51,7 +53,9 @@ const History = () => {
 										fontSize: 18,
 									}}
 								>
-									{item.date}
+									{dayjs(item.date, "DD-MM-YYYY").format(
+										"DD MMM YYYY"
+									)}
 								</Text>
 								<View
 									style={{
@@ -87,25 +91,9 @@ const History = () => {
 					}}
 					contentContainerStyle={{ rowGap: SIZES.xxSmall }}
 				/>
-			</View>
-		</SafeAreaView>
+			)}
+		</View>
 	);
 };
 
 export default History;
-
-const styles = StyleSheet.create({
-	screenContainer: {
-		flex: 1,
-		backgroundColor: COLORS.lightWhite,
-		// marginTop: StatusBar.currentHeight,
-	},
-	contentContainer: {
-		flex: 1,
-		paddingTop: SIZES.large,
-		paddingHorizontal: SIZES.medium,
-		backgroundColor: COLORS.lightWhite,
-		marginBottom: 84,
-		gap: SIZES.medium,
-	},
-});

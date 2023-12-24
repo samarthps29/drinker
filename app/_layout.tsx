@@ -9,6 +9,7 @@ import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { HistoryProvider } from "../utils/HistoryContext";
+import { NotificationProvider } from "../utils/NotificationContext";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -50,12 +51,14 @@ function RootLayoutNav() {
 			value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 		>
 			<HistoryProvider>
-				<Stack>
-					<Stack.Screen
-						name="(tabs)"
-						options={{ headerShown: false }}
-					/>
-				</Stack>
+				<NotificationProvider>
+					<Stack>
+						<Stack.Screen
+							name="(tabs)"
+							options={{ headerShown: false }}
+						/>
+					</Stack>
+				</NotificationProvider>
 			</HistoryProvider>
 		</ThemeProvider>
 	);

@@ -15,21 +15,12 @@ import {
 import InputTemplate from "../../components/InputTemplate";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { HistoryContext } from "../../utils/HistoryContext";
-import {
-	NotificationService,
-	schedulePushNotification,
-	cancelPushNotification,
-} from "../../utils/NotificationService";
+import { HistoryObject } from "../../utils/TypeDeclaration";
 
-export type HistoryObject = {
-	date: string;
-	targetAmount: number | null;
-	remainingAmount: number | null;
-};
 const currDate = dayjs().format("DD-MM-YYYY");
 
 const Home = () => {
-	const context = useContext(HistoryContext);
+	const historyContext = useContext(HistoryContext);
 	const [target, setTarget] = useState<number | null>(null);
 	const [remaining, setRemaining] = useState<number | null>(null);
 	const [drinkAmount, setDrinkAmount] = useState<string>("");
@@ -50,7 +41,7 @@ const Home = () => {
 				targetAmount: clear ? 0 : target,
 			};
 
-			context?.setHistArr((histArr) =>
+			historyContext?.setHistArr((histArr) =>
 				histArr.map((item) => {
 					if (item.date === currDate) {
 						updated = true;
@@ -60,14 +51,17 @@ const Home = () => {
 			);
 
 			if (!updated)
-				context?.setHistArr((histArr) => [...histArr, updatedItem]);
+				historyContext?.setHistArr((histArr) => [
+					...histArr,
+					updatedItem,
+				]);
 		}
 		setShouldSave(false);
 	};
 
 	useEffect(() => {
-		if (context?.histArr && context.histArr.length > 0) {
-			const filteredArr = context?.histArr.filter(
+		if (historyContext?.histArr && historyContext.histArr.length > 0) {
+			const filteredArr = historyContext?.histArr.filter(
 				(item) => item.date === currDate
 			);
 
@@ -77,13 +71,13 @@ const Home = () => {
 			}
 		}
 		(async () => {
-			if (context?.histArr.length !== 0)
+			if (historyContext?.histArr.length !== 0)
 				await AsyncStorage.setItem(
 					"histArr",
-					JSON.stringify(context?.histArr)
+					JSON.stringify(historyContext?.histArr)
 				);
 		})();
-	}, [context?.histArr]);
+	}, [historyContext?.histArr]);
 
 	useEffect(() => {
 		if (shouldSave) saveData();
@@ -156,6 +150,7 @@ const Home = () => {
 						<InputTemplate
 							input={targetAmount}
 							btnText="Target"
+							unitText="mL"
 							handleInputChange={(text: string) => {
 								const numericText = text.replace(/[^0-9]/g, "");
 								setTargetAmount(numericText);
@@ -180,6 +175,7 @@ const Home = () => {
 						<InputTemplate
 							input={drinkAmount}
 							btnText="Drink"
+							unitText="mL"
 							handleInputChange={(text: string) => {
 								const numericText = text.replace(/[^0-9]/g, "");
 								setDrinkAmount(numericText);
@@ -219,7 +215,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: SIZES.medium,
 		backgroundColor: COLORS.lightWhite,
-		marginBottom: 84, // height of tabbar
+		marginBottom: 84, // height of Tab Bar
 	},
 	imageContainer: {
 		borderRadius: SIZES.medium,

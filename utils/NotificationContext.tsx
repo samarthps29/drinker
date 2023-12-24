@@ -1,6 +1,6 @@
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { Platform } from "react-native";
 
 Notifications.setNotificationHandler({
@@ -11,33 +11,10 @@ Notifications.setNotificationHandler({
 	}),
 });
 
-const NotificationService = () => {
-	const [_, setExpoPushToken] = useState<string | null>(null);
-	const [__, setNotification] = useState<Notifications.Notification | null>(
-		null
-	);
-
-	useEffect(() => {
-		registerForPushNotificationsAsync().then((token) =>
-			setExpoPushToken(token)
-		);
-
-		const subscription = Notifications.addNotificationReceivedListener(
-			(notification) => {
-				setNotification(notification);
-			}
-		);
-
-		return () => {
-			subscription.remove();
-		};
-	}, []);
-};
-
 const schedulePushNotification = async (timer: number) => {
 	Notifications.scheduleNotificationAsync({
 		content: {
-			title: "Remember to drink water!",
+			title: "WATER !!!",
 		},
 		trigger: {
 			seconds: timer,
@@ -60,7 +37,7 @@ const cancelPushNotification = async () => {
 		});
 };
 
-async function registerForPushNotificationsAsync() {
+const registerForPushNotificationsAsync = async () => {
 	let token;
 	if (Platform.OS === "android") {
 		await Notifications.setNotificationChannelAsync("default", {
@@ -71,13 +48,16 @@ async function registerForPushNotificationsAsync() {
 		});
 	}
 	// checks if it is a real device and not an emulator
+	// TODO: rewrite it piece
 	if (Device.isDevice) {
-		const existingSettings = await Notifications.getPermissionsAsync();
-		let newSettings;
-		if (!existingSettings.granted) {
-			newSettings = await Notifications.requestPermissionsAsync();
+		const { status: existingStatus } =
+			await Notifications.getPermissionsAsync();
+		let finalStatus = existingStatus;
+		if (existingStatus !== "granted") {
+			const { status } = await Notifications.requestPermissionsAsync();
+			finalStatus = status;
 		}
-		if (!newSettings?.granted) {
+		if (finalStatus !== "granted") {
 			alert("Failed to get push token for push notification!");
 			return;
 		}
@@ -85,10 +65,42 @@ async function registerForPushNotificationsAsync() {
 		console.log(token);
 	}
 	return token;
-}
+};
 
-export {
-	NotificationService,
-	cancelPushNotification,
-	schedulePushNotification,
+export const NotificationContext = createContext<{
+	schedulePushNotification: (timer: number) => Promise<void>;
+	cancelPushNotification: () => Promise<void>;
+	registerForPushNotificationsAsync: () => Promise<void>;
+} | null>(null);
+
+export const NotificationProvider = ({ children }: React.PropsWithChildren) => {
+	// not needed rn
+	const [_, setNotification] = useState<Notifications.Notification | null>(
+		null
+	);
+
+	useEffect(() => {
+		const subscription = Notifications.addNotificationReceivedListener(
+			(notification) => {
+				// console.log(notification);
+				setNotification(notification);
+			}
+		);
+
+		return () => {
+			subscription.remove();
+		};
+	}, []);
+
+	return (
+		<NotificationContext.Provider
+			value={{
+				schedulePushNotification,
+				cancelPushNotification,
+				registerForPushNotificationsAsync,
+			}}
+		>
+			{children}
+		</NotificationContext.Provider>
+	);
 };

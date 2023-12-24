@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
-import { HistoryObject } from "../app/(tabs)";
+import { HistoryObject } from "./TypeDeclaration";
 
 export const HistoryContext = createContext<{
 	histArr: HistoryObject[];
@@ -24,12 +24,6 @@ export const HistoryProvider = ({
 			}
 		});
 	}, []);
-
-	// useEffect(() => {
-	// 	(async () => {
-	// 		await AsyncStorage.removeItem("histArr");
-	// 	})();
-	// });
 
 	return (
 		<HistoryContext.Provider value={{ histArr, setHistArr }}>

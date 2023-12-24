@@ -40,7 +40,7 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="History"
+				name="Two"
 				options={{
 					tabBarLabel: ({ focused }) => {
 						return (
@@ -50,7 +50,7 @@ export default function TabLayout() {
 									{ color: focused ? "black" : COLORS.gray },
 								]}
 							>
-								History
+								Settings
 							</Text>
 						);
 					},

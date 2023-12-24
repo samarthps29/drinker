@@ -4,13 +4,13 @@
 		"slug": "drinker",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./assets/images/icon.png",
+		"icon": "./assets/images/icon.jpg",
 		"scheme": "myapp",
 		"userInterfaceStyle": "automatic",
 		"splash": {
-			"image": "./assets/images/splash.jpg",
+			"image": "./assets/images/splash.png",
 			"resizeMode": "contain",
-			"backgroundColor": "#fffcf5"
+			"backgroundColor": "#FAFAFC"
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
