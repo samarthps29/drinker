@@ -20,16 +20,20 @@
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/images/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
-			}
-		},
-		"web": {
-			"bundler": "metro",
-			"output": "static",
-			"favicon": "./assets/images/favicon.png"
+			},
+			"package": "com.drinker.app"
 		},
 		"plugins": ["expo-router"],
 		"experiments": {
 			"typedRoutes": true
+		},
+		"extra": {
+			"router": {
+				"origin": false
+			},
+			"eas": {
+				"projectId": "5bceb9f7-5522-453c-8523-b6f1e079ec55"
+			}
 		}
 	}
 }
