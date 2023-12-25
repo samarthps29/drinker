@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import {
@@ -19,7 +17,6 @@ const Two = () => {
 	const context = useContext(HistoryContext);
 	const router = useRouter();
 	const [option, setOption] = useState(true);
-	dayjs.extend(customParseFormat);
 
 	return (
 		<SafeAreaView style={styles.screenContainer}>

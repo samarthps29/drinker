@@ -16,6 +16,12 @@ const Timer = () => {
 		}
 	}, [message]);
 
+	useEffect(() => {
+		notificationContext?.registerForPushNotificationsAsync().catch(() => {
+			console.log("Error");
+		});
+	}, []);
+
 	return (
 		<View style={{ flex: 1 }}>
 			{message === "" ? (
@@ -55,7 +61,6 @@ const Timer = () => {
 							setTimerValue(numericText);
 						}}
 						handlePress={async () => {
-							await notificationContext?.registerForPushNotificationsAsync();
 							await notificationContext?.cancelPushNotification();
 							await notificationContext?.schedulePushNotification(
 								parseInt(timerValue) === 0

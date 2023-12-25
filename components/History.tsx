@@ -2,11 +2,25 @@ import dayjs from "dayjs";
 import { FlatList, View, Text } from "react-native";
 import { FONT, SIZES } from "../constants/theme";
 import { HistoryObject } from "../utils/TypeDeclaration";
+import { useEffect, useState } from "react";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 const History = ({ dataArr }: { dataArr: HistoryObject[] }) => {
+	dayjs.extend(customParseFormat);
+	const [sortedArr, setSortedArr] = useState<HistoryObject[]>(dataArr);
+	useEffect(() => {
+		setSortedArr((arr) => {
+			return arr.sort(
+				(a, b) =>
+					dayjs(b.date, "DD-MM-YYYY").valueOf() -
+					dayjs(a.date, "DD-MM-YYYY").valueOf()
+			);
+		});
+	}, [dataArr]);
+
 	return (
 		<View style={{ flex: 1 }}>
-			{dataArr.length === 0 ? (
+			{sortedArr.length === 0 ? (
 				<View
 					style={{
 						backgroundColor: "transparent",
@@ -16,14 +30,14 @@ const History = ({ dataArr }: { dataArr: HistoryObject[] }) => {
 						flex: 1,
 					}}
 				>
-					<Text style={{ fontFamily: FONT.medium, fontSize: 16 }}>
+					<Text style={{ fontFamily: FONT.medium, fontSize: 18 }}>
 						Nothing Here
 					</Text>
 				</View>
 			) : (
 				<FlatList
 					showsVerticalScrollIndicator={false}
-					data={dataArr}
+					data={sortedArr}
 					renderItem={({ item }) => {
 						return (
 							<View

@@ -1,7 +1,7 @@
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { createContext, useEffect, useState } from "react";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -37,8 +37,9 @@ const cancelPushNotification = async () => {
 		});
 };
 
-const registerForPushNotificationsAsync = async () => {
+async function registerForPushNotificationsAsync() {
 	let token;
+
 	if (Platform.OS === "android") {
 		await Notifications.setNotificationChannelAsync("default", {
 			name: "default",
@@ -47,8 +48,7 @@ const registerForPushNotificationsAsync = async () => {
 			lightColor: "#FF231F7C",
 		});
 	}
-	// checks if it is a real device and not an emulator
-	// TODO: rewrite it piece
+
 	if (Device.isDevice) {
 		const { status: existingStatus } =
 			await Notifications.getPermissionsAsync();
@@ -65,7 +65,7 @@ const registerForPushNotificationsAsync = async () => {
 		console.log(token);
 	}
 	return token;
-};
+}
 
 export const NotificationContext = createContext<{
 	schedulePushNotification: (timer: number) => Promise<void>;
