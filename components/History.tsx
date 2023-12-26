@@ -12,12 +12,12 @@ const History = ({ dataArr }: { dataArr: HistoryObject[] }) => {
 		setSortedArr((arr) => {
 			return arr.sort(
 				(a, b) =>
-					dayjs(b.date, "DD-MM-YYYY").valueOf() -
-					dayjs(a.date, "DD-MM-YYYY").valueOf()
+					dayjs(a.date, "DD-MM-YYYY").valueOf() -
+					dayjs(b.date, "DD-MM-YYYY").valueOf()
 			);
 		});
 	}, [dataArr]);
-
+	
 	return (
 		<View style={{ flex: 1 }}>
 			{sortedArr.length === 0 ? (
